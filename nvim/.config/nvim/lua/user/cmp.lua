@@ -15,22 +15,21 @@ local check_backspace = function()
 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
 end
 
---   פּ ﯟ   some other good icons
 local kind_icons = {
 	Text = "",
 	Method = "m",
 	Function = "",
 	Constructor = "",
 	Field = "",
-	Variable = "",
+	Variable = "",
 	Class = "",
 	Interface = "",
-	Module = "",
+	Module = "",
 	Property = "",
 	Unit = "",
 	Value = "",
 	Enum = "",
-	Keyword = "",
+	Keyword = "",
 	Snippet = "",
 	Color = "",
 	File = "",
@@ -43,7 +42,6 @@ local kind_icons = {
 	Operator = "",
 	TypeParameter = "",
 }
--- find more here: https://www.nerdfonts.com/cheat-sheet
 
 cmp.setup({
 	snippet = {
@@ -51,7 +49,8 @@ cmp.setup({
 			luasnip.lsp_expand(args.body) -- For `luasnip` users.
 		end,
 	},
-	mapping = {
+
+	mapping = cmp.mapping.preset.insert({
 		["<C-k>"] = cmp.mapping.select_prev_item(),
 		["<C-j>"] = cmp.mapping.select_next_item(),
 		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
@@ -93,14 +92,14 @@ cmp.setup({
 			"i",
 			"s",
 		}),
-	},
+	}),
 	formatting = {
 		fields = { "kind", "abbr", "menu" },
 		format = function(entry, vim_item)
-			-- Kind icons
 			vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
-			-- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
 			vim_item.menu = ({
+				nvim_lua = "",
+				emoji = "",
 				nvim_lsp = "[LSP]",
 				luasnip = "[Snippet]",
 				buffer = "[Buffer]",
@@ -112,25 +111,27 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "nvim_lsp" },
+		{ name = "nvim_lua" },
 		{ name = "luasnip" },
 		{ name = "buffer" },
 		{ name = "path" },
-		{ name = "dictionary" },
+		{ name = "dictionary", keyword_length = 2 },
 	},
 	confirm_opts = {
 		behavior = cmp.ConfirmBehavior.Replace,
 		select = false,
 	},
 	window = {
+		-- completion = cmp.config.window.bordered(),
 		documentation = {
 			border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 		},
 	},
 	experimental = {
-		ghost_text = false,
-		native_menu = false,
+		ghost_text = true,
 	},
 })
+
 require("cmp_dictionary").setup({
 	dic = {
 		["*"] = { "/usr/share/dict/words" },
